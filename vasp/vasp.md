@@ -11,8 +11,10 @@ The MPI is a set of standard communicaiton protocols for programs running on dif
 - Linear algebra libraries. As DFT is basically solving an eigenvalue problem, the heavylifting is performed by linear algebra libraries. 
 - Fast Fourier Transform (FFT) library. 
 
-All these are controlled via the makefile.include file in the source folder, and the module environment variable management tool. You should have learned what environment variables are and how to view and update them. `module.sh` is just a convenient automation tool for this and is available on all the clusters. Loading appropriate modules ensure the compilers and linkers can find the appropriate definitions of symbols in building the application.
+All these are controlled via the makefile.include file in the source folder, and the module environment variable management tool. You should have learned what environment variables are and how to view and update them. `module.sh` is just a convenient automation tool for this and is available on all the clusters. Loading appropriate modules ensure the compilers and linkers can find the appropriate definitions of symbols in building the application. To learn how to use it, go to the [documentation](http://modules.sourceforge.net/). Specific module names can be found by typing
 
+    module avail
+	
 In principle the compiler, MPI, and the numerical libraries can be mixed and matched, but in practice compatibility is poor and one has to resort to trial and error to find which combinations work the best (fast and stable). This repository provides example files that were tested to work on some clusters the group use. 
  - UCLA [Hoffman2](./makefile.include.hoff)
  - SDSC [Expanse](./makefile.include.expanse.vasp5)
