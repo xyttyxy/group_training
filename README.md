@@ -30,7 +30,9 @@ https://rc.byu.edu/documentation/unix-tutorial/
 ### SSH
 SSH stands for secure shell and is a way to send commands and receive output over a network. This is the connection protocol (also a command in itself) you will use to connect to clusters. Follow this link to learn the basics of it:
 https://www.ccn.ucla.edu/wiki/index.php/Hoffman2:Accessing_the_Cluster
+
 You may want to save yourself the trouble of typing passwords everytime by creating a public key and storing it on the server (cluster):
 https://serverpilot.io/docs/how-to-use-ssh-public-key-authentication/
 
-
+### VASP
+[VASP](https://www.vasp.at/) stands for Vienna Ab-initio Simulation Package. It is a very popular package for density functional theory calculations in periodic systems. The VASP [Manual](https://www.vasp.at/wiki/index.php/The_VASP_Manual) has everything you need to know about it. Information on how to compile it on various clusters can be found [here](vasp/vasp.md). 
