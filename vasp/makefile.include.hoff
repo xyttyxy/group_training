@@ -1,11 +1,11 @@
 ################################################
-# Compiling on SDSC Expanse Cluster
+# Compiling on UCLA Hoffman2 Cluster
 # Edited Yantao Xia (xyttyxy@ucla.edu) 2021/12/14
 # 
 # Note: this file is for VASP-5.4.4
 #
 # module purge
-# module load cpu intel/19.1.1.217 intel-mpi/2019.8.254 intel-mkl/2019.1.144
+# module load intel
 ################################################
 
 # Precompiler options

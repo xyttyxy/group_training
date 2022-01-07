@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>vasp.html</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+
+</head>
+
+<body>
+
+<h1 id="vasprelatedstuff">VASP related stuff</h1>
+
+<p>This document provides information on compiling and using vasp</p>
+
+<h2 id="compiling">Compiling</h2>
+
+<p>General instructions for compiling are found in the source folder, which you should already have if you&#8217;re reading this. More information is found on the <a href="https://www.vasp.at/wiki/index.php/Installing_VASP.5.X.X">manual</a>. Conceptually, you will need:</p>
+
+<ul>
+<li>A suite of Fortran, C++, and C compilers.</li>
+</ul>
+
+<p>On most platforms you will have Intel and GNU compilers, occasionally others (e.g. AOCC and LLVM) are used. Typically cluster administrator provide detailed documentation on selecting and using them.</p>
+
+<ul>
+<li>An installation of message passing interface (MPI).</li>
+</ul>
+
+<p>The MPI is a set of standard communicaiton protocols for programs running on different CPUs to communicate with each other and coordinate their computing efforts. VASP is almost always run as a highly parallized application, so it is necessary that appropriate MPI is available and selected.</p>
+
+<ul>
+<li>Linear algebra libraries. As DFT is basically solving an eigenvalue problem, the heavylifting is performed by linear algebra libraries.</li>
+<li>Fast Fourier Transform (FFT) library.</li>
+</ul>
+
+<p>All these are controlled via the makefile.include file in the source folder, and the module environment variable management tool. You should have learned what environment variables are and how to view and update them. <code>module.sh</code> is just a convenient automation tool for this and is available on all the clusters. Loading appropriate modules ensure the compilers and linkers can find the appropriate definitions of symbols in building the application. To learn how to use it, go to the <a href="http://modules.sourceforge.net/">documentation</a>. Specific module names can be found by typing</p>
+
+<pre><code>module avail
+</code></pre>
+
+<p>In principle the compiler, MPI, and the numerical libraries can be mixed and matched, but in practice compatibility is poor and one has to resort to trial and error to find which combinations work the best (fast and stable). This repository provides example files that were tested to work on some clusters the group use.</p>
+
+<ul>
+<li> UCLA <a href="./makefile.include.hoff">Hoffman2</a></li>
+<li> SDSC <a href="./makefile.include.expanse.vasp5">Expanse</a></li>
+<li> PSC <a href="./makefile.include.br2">Bridges2</a></li>
+</ul>
+
+<p>Simply download them to the src folder, rename to <code>makefile.include</code>, load the appropriate modules (indicated in file), and <code>make all</code>.</p>
+
+<h2 id="tutorialsandexamples">Tutorials and Examples</h2>
+
+<h2 id="errorsanddebugging">Errors and Debugging</h2>
+
+</body>
+</html>
