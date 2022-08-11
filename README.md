@@ -8,6 +8,7 @@ This repository records and fascilitates training of new students to the Sautet 
 - Python and Atomic Simulation Environment (ASE)
 - (very) basic solid state physics and DFT
 - VASP tutorials and tips
+- A tutorial on neural network potentials based on the n2p2 package
 
 ## Cluster access
 As beginners you will only need UCLA's own (free) hoffman2 cluter for learning. You can register an account following this:
