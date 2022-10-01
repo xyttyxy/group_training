@@ -50,9 +50,9 @@ def rot_trans_ads(ads, normal, coordinate, h):
     return ads
 
 def add_island_ads(slab, island_ndx):
-  """
-  Function to add CO  on-top site of the island/step edge site -- known information about the system.
-  """
+    """
+    Function to add CO  on-top site of the island/step edge site -- known information about the system.
+    """
     pos = slab.get_positions()
     t = slab.copy()
     for i in island_ndx:
@@ -66,16 +66,16 @@ def add_island_ads(slab, island_ndx):
     return t
 
 def orderings(n_sites, cnt, normals, coordinates, slab, island_ndx, trajw):
-  """
-  Function that generates all the possible orderings of CO on various symmetric sites  at a given coverage "cnt" - no. of CO here
-  n_sites = number of sites
-  cnt = no. of CO molecules
-  normals = normal to the sites
-  coordinates = coordinate of the sites
-  slab = slab on which you want to adsorb things
-  island_ndx = on-top site of the island/step edge site
-  trajw = ASE TrajectoryWriter object to write the generated data
-  """
+    """
+    Function that generates all the possible orderings of CO on various symmetric sites  at a given coverage "cnt" - no. of CO here
+    n_sites = number of sites
+    cnt = no. of CO molecules
+    normals = normal to the sites
+    coordinates = coordinate of the sites
+    slab = slab on which you want to adsorb things
+    island_ndx = on-top site of the island/step edge site
+    trajw = ASE TrajectoryWriter object to write the generated data
+    """
     atoms_stack=[]
     d_CO = 1.158
     h = 1.848
@@ -105,9 +105,9 @@ def orderings(n_sites, cnt, normals, coordinates, slab, island_ndx, trajw):
                     trajw.write(t2)
 
 def gen_struc(slab, nCO, min_nCO, surf_ndx, island_ndx, trajw):
-"""
-Function that generates all the possible orderings of CO on various symmetric sites for coverage between [min_nCO and nCO]
-"""
+    """
+    Function that generates all the possible orderings of CO on various symmetric sites for coverage between [min_nCO and nCO]
+    """
     bond_range={}
     for v in itertools.product(['Pt', 'C', 'O'], repeat=2):
         bond_range[v]=[1,10]
@@ -119,17 +119,17 @@ Function that generates all the possible orderings of CO on various symmetric si
     normals = sites.get_adsorption_vectors(unique=False)
 
 # You can remove certain sites based on it's connectivity like this:
-#     remove hollow sites -- we know should be be present
-#     del_ndx = np.where(connectivities==4)[0]
-#     coordinates = np.delete(coordinates,del_ndx,0)
-#     normals  = np.delete(normals,del_ndx,0)
-#     connectivities = np.delete(connectivities, del_ndx,0)
+    # remove hollow sites -- we know should be be present
+    del_ndx = np.where(connectivities==4)[0]
+    coordinates = np.delete(coordinates,del_ndx,0)
+    normals  = np.delete(normals,del_ndx,0)
+    connectivities = np.delete(connectivities, del_ndx,0)
 
     n_sites = len(coordinates)
     d_CO = 1.158
     h = 1.848
 
-    # remove sites that generate irrelevant strucutres ==> this can be some strucutres that put CO 
+    # remove sites that generate irrelevant strucutres ==> this can be some strucutres that put CO
     # molecules too close to step/ O-Pt distance is too small
     # trajw_check = TrajectoryWriter('CHECK.traj','a')
     del_=[]
@@ -158,12 +158,12 @@ Function that generates all the possible orderings of CO on various symmetric si
     for cnt in range(nCO+1):
 
         #ignore 0 coverage region
-        if cnt<min_CO:
+        if cnt<min_nCO:
             continue
 
         orderings(n_sites, cnt, normals, coordinates, slab, island_ndx, trajw)
 
-# Make a test slab ==> this should work on any given slab though. 
+# Make a test slab ==> this should work on any given slab though.
 atoms = bulk('Pt', 'fcc', cubic=True, a=3.985)
 gen = SlabGenerator(
     atoms,
@@ -182,4 +182,4 @@ posz = pos[:,2]
 terrace_ndx = [i for i,p in enumerate(posz) if p>16 and p<17.5]
 step_ndx = [16, 33, 50]
 
-gen_struc(slab1, nCO = 8, min_nCO = 7, terrace_ndx, step_ndx, trajw)
+gen_struc(slab1, nCO = 8, min_nCO = 7, surf_ndx = terrace_ndx, island_ndx = step_ndx, trajw=trajw)
