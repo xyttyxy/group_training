@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+
+"""catkit_orderings.py: Script to generate different ordering of adsorbate on surafce for given coverage range."""
+__author__      = "Vaidish Sumaria"
+__copyright__   = " "
+
 from catkit.gen.surface import SlabGenerator
 from ase.build import bulk
 from ase.visualize import view
