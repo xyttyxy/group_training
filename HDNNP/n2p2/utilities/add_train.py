@@ -43,7 +43,7 @@ def check_in_train(traj, train_traj):
 
     return train, valid
 
-def add_train(traj, traj_nn, train_traj=None):
+def add_train(traj, traj_nn, train_traj=None, cond='force'):
     trajw = TrajectoryWriter('add_train.traj','a')
     traj2 = copy.deepcopy(traj)
     traj_nn2 = copy.deepcopy(traj_nn)
@@ -54,39 +54,84 @@ def add_train(traj, traj_nn, train_traj=None):
 
     if train_traj:
         train_list, valid_list = check_in_train(traj, train_traj)
-        f_dft_v = np.take(f_dft, valid_list)
-        f_nn_v = np.take(f_nn, valid_list)
 
-        ndx_add_train=[]
-        
-        for i in range(len(f_dft_v)):
-            f_d = np.array(f_dft_v[i])
-            f_n = np.array(f_nn_v[i])
-            f_d_mag = np.apply_along_axis(mag_f, 1, f_d)
-            f_n_mag = np.apply_along_axis(mag_f, 1, f_n)
-            e = abs(f_d - f_n)
-            fmax = np.max(f_d_mag)
-            emax = np.max(e)
-            if emax>1 and fmax<20:
-                ndx_add_train.append(i)
+        print(len(train_list), len(valid_list))
 
-        for ndx in ndx_add_train:
-            atoms = traj2[valid_list[ndx]]
-            trajw.write(atoms)
-            
+        if cond=='energy':
+            print('Using energy criteria for selection \n')
+            e_dft_v = np.take(e_dft, valid_list)
+            e_nn_v = np.take(e_nn, valid_list)
+            err = abs(e_dft_v-e_nn_v)*1000
+            ndx_add_train = np.where(err>10)[0]
+            for ndx in ndx_add_train:
+                atoms = traj2[valid_list[ndx]]
+                trajw.write(atoms)
+
+        if cond=='force':
+            f_dft_v = np.take(f_dft, valid_list)
+            f_nn_v = np.take(f_nn, valid_list)
+
+            ndx_add_train=[]
+
+            for i in range(len(f_dft_v)):
+                f_d = np.array(f_dft_v[i])
+                f_n = np.array(f_nn_v[i])
+                f_d_mag = np.apply_along_axis(mag_f, 1, f_d)
+                f_n_mag = np.apply_along_axis(mag_f, 1, f_n)
+                e = abs(f_d - f_n)
+                fmax = np.max(f_d_mag)
+                emax = np.max(e)
+                if emax>5 and fmax<30:
+                    ndx_add_train.append(i)
+
+            for ndx in ndx_add_train:
+                atoms = traj2[valid_list[ndx]]
+                trajw.write(atoms)
+
     else:
-        print("ERROR: --t tag missing")
-        
+        if cond=='force':
+            ndx_add_train=[]
+            for i in range(len(e_dft)):
+                f_d = np.array(f_dft[i])
+                f_n = np.array(f_nn[i])
+                f_d_mag = np.apply_along_axis(mag_f, 1, f_d)
+                f_n_mag = np.apply_along_axis(mag_f, 1, f_n)
+                e = abs(f_d - f_n)
+                fmax = np.max(f_d_mag)
+                emax = np.max(e)
+                if emax>5 and fmax<30:
+                    ndx_add_train.append(i)
+
+            print(len(ndx_add_train))
+            for ndx in ndx_add_train:
+                atoms = traj2[ndx]
+                trajw.write(atoms)
+
+        if cond=='energy':
+            ndx_add_train=[]
+            err = abs(e_dft-e_nn)*1000
+            ndx_add_train = np.where(err>10)[0]
+            for ndx in ndx_add_train:
+                atoms = traj2[ndx]
+                trajw.write(atoms)
+
 if __name__=="__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--d', help="Ref DFT trajectory", default=None)
     parser.add_argument('--n', help="NN trajectory", default=None)
     parser.add_argument('--t', help="Train trajectory", default=None)
+    parser.add_argument('--c', help="Choice between forces & energy to choose index", default='force')
 
     args = parser.parse_args()
 
     traj = read(args.d,':')
     traj_nn = read(args.n,':')
 
-    train = read(args.t,':')
-    add_train(traj, traj_nn, train)
+    print(args.c)
+
+    if args.t:
+        train = read(args.t,':')
+        add_train(traj, traj_nn, train, cond=args.c)
+
+    else:
+        add_train(traj, traj_nn, cond=args.c)
