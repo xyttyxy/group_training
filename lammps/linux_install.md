@@ -73,5 +73,7 @@ python3 -m pip install --no-binary :all: mpi4py
 ## Getting floating-point types correctly marshalled
 As of ASE v3.23 the LAMMPSLib interface does not read forces, velocities, and positions correctly out of the box. The underlying reason is incompatible data type marshalling between LAMMPS's C API and its python bindings. `src/library.h` defines `LAMMPS_INT_DOUBLE = 2` but `lammps.gather_atoms` checks for `type == 1` for doubles, and so LAMMPSLib passes in `type = 1` when calling `gather_atoms` and `scatter_atoms`. Once this type mismatch is fixed, `double` arrays are read in correctly. This however requires a hack to both LAMMPS itself and ASE. 
 
+Rewritten in [24Dec2020](https://github.com/lammps/lammps/pull/2521). Unsure if downstream picked up. 
+
 ## Eliminating segfault when used in optimization
 Again, as of ASE v3.23 the interface cannot be used in optimizations, leading to [segmentation faults](https://gitlab.com/ase/ase/-/issues/594). This is caused by premature deletion of the `lammps` object, leading to dangling pointers (see my comment in the issue referred). A workaround is setting `keep_alive = True`, although I would expect the interface to fail more gracefully or at least give a comprehensible error message. 
